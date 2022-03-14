@@ -11,21 +11,26 @@ cloudinary.config({
     secure: true,
 });
 export default function handler(request, response) {
-    cloudinary.uploader.upload(
-        "../../files/images/practice-1.jpg",
-        {
-            type: "authenticated",
-            folder: "practice",
-            access_control: [{ access_type: "token" }],
-            sign_url: true,
-        },
-        (error, result) => {
-            response.status(200).json({
-                body: request.body,
-                query: request.query,
-                cookies: request.cookies,
-            });
-        }
-    );
+    // cloudinary.uploader.upload(
+    //     "../../files/images/practice-1.jpg",
+    //     {
+    //         type: "authenticated",
+    //         folder: "practice",
+    //         access_control: [{ access_type: "token" }],
+    //         sign_url: true,
+    //     },
+    //     (error, result) => {
+    //         response.status(200).json({
+    //             body: request.body,
+    //             query: request.query,
+    //             cookies: request.cookies,
+    //         });
+    //     }
+    // );
+    return response.status(200).json({
+        body: request.body,
+        query: request.query,
+        cookies: request.cookies,
+    });
 
 }
