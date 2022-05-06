@@ -1,64 +1,84 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
+import ImageMarker, { Marker, MarkerComponentProps } from 'react-image-marker';
+import { useState } from 'react';
 
+import { useSession, signIn, signOut } from "next-auth/react"
 
 
 export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  const { data: session } = useSession();
+  const { data } = useSession();
+  const [markers, setMarkers] = useState([
+    {
+      top: 58,
+      left: 10
+    }
+  ]);
+  const CustomMarker = (props) => {
+    return (
+      <a style={{ "display": "block", "cursor": "pointer", "position": "absolute", "height": "25px", "width": "25px" }} target="_new" title="Test" href="http://thecrosstown.ca/the-project/stations-and-stops/eglinton-west-station"></a>
+    );
+  };
 
-      <main>
-        <h1 className="text-3xl font-bold underline">
-          Read{' '}
-          <Link href="/posts/first-post">
-            <a>this page!</a>
-          </Link>
-        </h1>
+  if (session) {
+    return (
+      <div className="container">
+        <Head>
+          {/* <div>Access Token: {accessToken}</div> */}
+          <title>Create Next App</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-        <div className="grid">
+        <main>
+          <h1 className="text-3xl font-bold underline">
+            Read{' '}
+            <Link href="/posts/first-post">
+              <a>this page!</a>
+            </Link>
+          </h1>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          <div className="grid">
 
+            <ImageMarker
+              src="/images/map.jpg"
+              markers={markers}
+              markerComponent={CustomMarker}
+            // onAddMarker={(marker) => setMarkers([...markers, marker])}
+            />
+            <a
+              href="https://github.com/vercel/next.js/tree/master/examples"
+              className="card"
+            >
+              <h3>Examples &rarr;</h3>
+              <p>Discover and deploy boilerplate example Next.js projects.</p>
+            </a>
+
+            <a
+              href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+              className="card"
+            >
+              <h3>Deploy &rarr;</h3>
+              <p>
+                Instantly deploy your Next.js site to a public URL with Vercel.
+              </p>
+            </a>
+          </div>
+        </main>
+
+        <footer>
           <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
+            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
+            Powered by{' '}
+            <img src="/vercel.svg" alt="Vercel" className="logo" />
           </a>
+        </footer>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
+        <style jsx>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
@@ -189,7 +209,7 @@ export default function Home() {
         }
       `}</style>
 
-      <style jsx global>{`
+        <style jsx global>{`
         html,
         body {
           padding: 0;
@@ -203,6 +223,32 @@ export default function Home() {
           box-sizing: border-box;
         }
       `}</style>
-    </div>
+      </div>
+    )
+  }
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn("azure-ad-b2c")}>Sign in</button>
+    </>
   )
+
 }
+
+// export default function Home() {
+//   const { data: session } = useSession()
+//   if (session) {
+//     return (
+//       <>
+//         Signed in as {session.user.email} <br />
+//         <button onClick={() => signOut()}>Sign out</button>
+//       </>
+//     )
+//   }
+//   return (
+//     <>
+//       Not signed in <br />
+//       <button onClick={() => signIn()}>Sign in</button>
+//     </>
+//   )
+// }
